@@ -18,7 +18,7 @@ public class RepairZone : MonoBehaviour
         //other.gameObject.
         if(other.CompareTag("Tower"))
         {
-            //other.GetComponent<myPlayerFire>.ReloadBullet();
+            other.GetComponent<myPlayerFire>().ReloadBullet();
         }
     }
 

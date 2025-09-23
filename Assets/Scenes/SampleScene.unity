@@ -759,8 +759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 5241388874048380498, guid: d6f707d9ebf73344eb13ed246e62cb90, type: 3}
   SpawnPos: {fileID: 1411925729}
-  coolTime: 3
-  maxBullet: 10
+  maxBullet: 3
 --- !u!4 &951831181
 Transform:
   m_ObjectHideFlags: 0

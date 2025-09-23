@@ -6,7 +6,6 @@ public class myPlayerFire : MonoBehaviour
 {
     [SerializeField] GameObject bullet;
     [SerializeField] Transform SpawnPos;
-    [SerializeField] float coolTime = 3f;
 
     [SerializeField]
     int maxBullet = 10;
@@ -21,24 +20,23 @@ public class myPlayerFire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && currentBullet <= 0)
+        if(Input.GetKeyDown(KeyCode.Space) && currentBullet >0)
         {
             currentBullet--;
-          
-            
+                
             //ÃÑ¾Ë »ý¼º
             GameObject prefabBullet = Instantiate(bullet, SpawnPos.position, transform.rotation);
             //ÃÑ¾Ë¹ß»ç
             prefabBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 500.0f);
-                Debug.Log("Bullet : " + currentBullet);
-                Destroy(bullet, 5.0f);
-           
+            Debug.Log("Last Bullet : " + currentBullet);
 
+            Destroy(prefabBullet, 5.0f);
         }
     }
     public void ReloadBullet()
     {
         currentBullet = maxBullet;
+        Debug.Log("Add Bullet : " + currentBullet);
     }
 
     public void SetCurrentBullet(int currentBullet)
