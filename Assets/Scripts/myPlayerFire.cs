@@ -6,27 +6,48 @@ public class myPlayerFire : MonoBehaviour
 {
     [SerializeField] GameObject bullet;
     [SerializeField] Transform SpawnPos;
-
     [SerializeField] float coolTime = 3f;
 
-    float currentTime = 0;
+    [SerializeField]
+    int maxBullet = 10;
+    int currentBullet = 0;
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentBullet = maxBullet;
+        Debug.Log(currentBullet);
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentTime += Time.deltaTime;
-        if (currentTime > coolTime)
+        if(Input.GetKeyDown(KeyCode.Space) && currentBullet <= 0)
         {
-        //ÃÑ¾Ë »ý¼º
-            GameObject prefabBullet = Instantiate(bullet,SpawnPos.position,transform.rotation);
-        //ÃÑ¾Ë¹ß»ç
+            currentBullet--;
+          
+            
+            //ÃÑ¾Ë »ý¼º
+            GameObject prefabBullet = Instantiate(bullet, SpawnPos.position, transform.rotation);
+            //ÃÑ¾Ë¹ß»ç
             prefabBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 500.0f);
-            currentTime = 0;
+                Debug.Log("Bullet : " + currentBullet);
+                Destroy(bullet, 5.0f);
+           
+
         }
+    }
+    public void ReloadBullet()
+    {
+        currentBullet = maxBullet;
+    }
+
+    public void SetCurrentBullet(int currentBullet)
+    {
+        this.currentBullet = currentBullet;
+    }
+
+    public int GetCurrentBullet()
+    {
+        return currentBullet;
     }
 }

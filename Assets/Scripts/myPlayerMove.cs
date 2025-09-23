@@ -5,6 +5,7 @@ using UnityEngine;
 public class myPlayerMove : MonoBehaviour
 {
     [SerializeField] float speed = 0.05f;
+    [SerializeField] float lookSpeed = 0.1f;
     float moveX;
     float moveZ;
     float moveY;
@@ -47,9 +48,17 @@ public class myPlayerMove : MonoBehaviour
             movement += Vector3.right;
         }
         movement.Normalize();
-        transform.Translate(movement * speed,Space.World);
-        //vector 초기화 
 
-        transform.LookAt(transform.position + movement);
+        //vector 초기화 
+        if(movement.magnitude > 0.1f)
+        {
+            //축을 하나 더 사용-> 회전을 위해
+            Quaternion q = Quaternion.LookRotation(movement);
+            //변수만 저장, 변경은 못함
+            transform.rotation = Quaternion.Lerp(transform.rotation, q, lookSpeed);
+           //transform.LookAt(transform.position + movement);
+        }
+        transform.Translate(movement * speed,Space.World);
+
     }
 }
