@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class myPlayerMove : MonoBehaviour
 {
     [SerializeField] float speed = 0.05f;
+    [SerializeField] float isRunning = 1.0f;
+    [SerializeField] float runSpeed = 2.0f;
     [SerializeField] float lookSpeed = 0.1f;
+    [SerializeField] float jumpSpeed = 200f;
     float moveX;
     float moveZ;
     float moveY;
+    bool onGround = true;
 
     Transform playerPosition;
+    Animator animatior;
+    Rigidbody rb;
     Vector3 movement;
 
     void Start()
@@ -19,6 +26,8 @@ public class myPlayerMove : MonoBehaviour
        // playerPosition = GetComponent<Transform>();
         //movement = new Vector3(0,1,0);
         //transform.position = movement;
+        animatior = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -50,6 +59,7 @@ public class myPlayerMove : MonoBehaviour
         movement.Normalize();
 
         //vector 초기화 
+        //movement.magnitude에 관해서 찾아보기 
         if(movement.magnitude > 0.1f)
         {
             //축을 하나 더 사용-> 회전을 위해
@@ -58,7 +68,37 @@ public class myPlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, q, lookSpeed);
            //transform.LookAt(transform.position + movement);
         }
-        transform.Translate(movement * speed,Space.World);
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            isRunning = runSpeed;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            isRunning = 1.0f;
+        }
+        if(Input.GetKeyDown(KeyCode.Space) && onGround)
+        {
+       
+            animatior.SetTrigger("Jump");
+            rb.AddForce(Vector3.up*jumpSpeed);
+           
+        }
+        
 
+        transform.Translate(movement * speed*isRunning, Space.World);
+        animatior.SetFloat("Movement" , movement.magnitude*isRunning);
+      
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.CompareTag("ground"))
+        {
+            onGround = true;
+        }
+        else
+        {
+            onGround = false;
+        }
     }
 }
