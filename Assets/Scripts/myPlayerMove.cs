@@ -13,7 +13,7 @@ public class myPlayerMove : MonoBehaviour
     float moveX;
     float moveZ;
     float moveY;
-    bool onGround = true;
+    bool isGround = true;
 
     Transform playerPosition;
     Animator animatior;
@@ -23,7 +23,7 @@ public class myPlayerMove : MonoBehaviour
     void Start()
     {
         //moveZ = 0.0f;
-       // playerPosition = GetComponent<Transform>();
+        // playerPosition = GetComponent<Transform>();
         //movement = new Vector3(0,1,0);
         //transform.position = movement;
         animatior = GetComponent<Animator>();
@@ -58,15 +58,15 @@ public class myPlayerMove : MonoBehaviour
         }
         movement.Normalize();
 
-        //vector ÃÊ±âÈ­ 
-        //movement.magnitude¿¡ °üÇØ¼­ Ã£¾Æº¸±â 
-        if(movement.magnitude > 0.1f)
+        //vector ï¿½Ê±ï¿½È­ 
+        //movement.magnitudeï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ Ã£ï¿½Æºï¿½ï¿½ï¿½ 
+        if (movement.magnitude > 0.1f)
         {
-            //ÃàÀ» ÇÏ³ª ´õ »ç¿ë-> È¸ÀüÀ» À§ÇØ
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½-> È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Quaternion q = Quaternion.LookRotation(movement);
-            //º¯¼ö¸¸ ÀúÀå, º¯°æÀº ¸øÇÔ
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             transform.rotation = Quaternion.Lerp(transform.rotation, q, lookSpeed);
-           //transform.LookAt(transform.position + movement);
+            //transform.LookAt(transform.position + movement);
         }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -76,29 +76,37 @@ public class myPlayerMove : MonoBehaviour
         {
             isRunning = 1.0f;
         }
-        if(Input.GetKeyDown(KeyCode.Space) && onGround)
+        animatior.SetBool("onGround", isGround);
+        if (Input.GetKeyDown(KeyCode.Space) && isGround)
         {
-       
-            animatior.SetTrigger("Jump");
-            rb.AddForce(Vector3.up*jumpSpeed);
-           
-        }
-        
 
-        transform.Translate(movement * speed*isRunning, Space.World);
-        animatior.SetFloat("Movement" , movement.magnitude*isRunning);
-      
+            animatior.SetTrigger("Jump");
+            rb.AddForce(Vector3.up * jumpSpeed);
+
+        }
+
+
+        transform.Translate(movement * speed * isRunning, Space.World);
+        animatior.SetFloat("Movement", movement.magnitude * isRunning);
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag("ground"))
+        {
+            isGround = true;
+        }
+
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
         if(collision.collider.CompareTag("ground"))
         {
-            onGround = true;
-        }
-        else
-        {
-            onGround = false;
+            isGround = !isGround;
         }
     }
+
+
 }
