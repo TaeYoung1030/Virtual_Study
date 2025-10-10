@@ -5,11 +5,17 @@ using UnityEngine;
 
 public class myPlayerMove : MonoBehaviour
 {
-    [SerializeField] float speed = 0.05f;
+    [SerializeField] float speed = 2f;
     [SerializeField] float isRunning = 1.0f;
     [SerializeField] float runSpeed = 2.0f;
     [SerializeField] float lookSpeed = 0.1f;
     [SerializeField] float jumpSpeed = 200f;
+
+    [SerializeField] public float maxHP = 10;
+
+    [SerializeField] public float currentCoolTime;
+    public float HP;
+    public float skillCoolTime = 10f;
     float moveX;
     float moveZ;
     float moveY;
@@ -28,11 +34,15 @@ public class myPlayerMove : MonoBehaviour
         //transform.position = movement;
         animatior = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        HP = maxHP;
     }
 
 
     void Update()
     {
+        if (currentCoolTime >= 10f)
+            currentCoolTime = 10f;
+        currentCoolTime += Time.deltaTime;
         // movement.x += speed;
         //moveX = Input.GetAxis("Horizontal");
         //moveZ = Input.GetAxis("Vertical");
@@ -56,18 +66,9 @@ public class myPlayerMove : MonoBehaviour
         {
             movement += Vector3.right;
         }
-        movement.Normalize();
 
         //vector �ʱ�ȭ 
         //movement.magnitude�� ���ؼ� ã�ƺ��� 
-        if (movement.magnitude > 0.1f)
-        {
-            //���� �ϳ� �� ���-> ȸ���� ����
-            Quaternion q = Quaternion.LookRotation(movement);
-            //������ ����, ������ ����
-            transform.rotation = Quaternion.Lerp(transform.rotation, q, lookSpeed);
-            //transform.LookAt(transform.position + movement);
-        }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             isRunning = runSpeed;
@@ -76,19 +77,42 @@ public class myPlayerMove : MonoBehaviour
         {
             isRunning = 1.0f;
         }
+        if(Input.GetKeyDown(KeyCode.Space)&&currentCoolTime > skillCoolTime)
+        {
+            currentCoolTime = 0f;
+            DestroyBullet();
+        }
         animatior.SetBool("onGround", isGround);
-        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && isGround)
         {
 
             animatior.SetTrigger("Jump");
             rb.AddForce(Vector3.up * jumpSpeed);
 
         }
+        movement.Normalize();
+        if (movement.magnitude > 0.1f)
+        {
+            //���� �ϳ� �� ���-> ȸ���� ����
+            Quaternion q = Quaternion.LookRotation(movement);
+            //������ ����, ������ ����
+            transform.rotation = Quaternion.Lerp(transform.rotation, q, lookSpeed);
+            //transform.LookAt(transform.position + movement);
+        }
 
 
-        transform.Translate(movement * speed * isRunning, Space.World);
+        transform.Translate(movement * Time.deltaTime *speed * isRunning, Space.World);
         animatior.SetFloat("Movement", movement.magnitude * isRunning);
 
+    }
+
+    void DestroyBullet()
+    {
+        GameObject[] bullets;
+        bullets = GameObject.FindGameObjectsWithTag("Bullet");
+
+        foreach(GameObject bullet in bullets)
+            Destroy(bullet);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -98,6 +122,18 @@ public class myPlayerMove : MonoBehaviour
             isGround = true;
         }
 
+        if(collision.gameObject.CompareTag("Bullet"))
+        {
+            Destroy(collision.gameObject);
+            HP--;
+        }
+        if(collision.gameObject.CompareTag("Heal"))
+        {
+            Destroy(collision.gameObject);
+            HP += 3;
+            if(HP >=maxHP) { HP = maxHP; }
+        }
+        
     }
 
     private void OnCollisionExit(Collision collision)

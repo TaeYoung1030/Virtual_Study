@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class myPlayerFire : MonoBehaviour
 {
-    [SerializeField] GameObject bullet;
     [SerializeField] Transform SpawnPos;
 
-    [SerializeField]
-    int maxBullet = 10;
+    [SerializeField] float CoolTime = 4f;
+    [SerializeField] float fireSpeed = 300.0f;
+    [SerializeField] int maxBullet = 10;
+
+    [SerializeField] GameObject bullet;
+    [SerializeField] GameObject healSphere;
+    [SerializeField] GameObject player;
+
     int currentBullet = 0;
+    float currentTime = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
         currentBullet = maxBullet;
-        Debug.Log(currentBullet);
+        CoolTime = Random.Range(2, 8);
+        //Debug.Log(currentBullet);
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
         if(Input.GetKeyDown(KeyCode.Space) && currentBullet >0)
         {
             currentBullet--;
@@ -31,21 +39,43 @@ public class myPlayerFire : MonoBehaviour
             Debug.Log("Last Bullet : " + currentBullet);
 
             Destroy(prefabBullet, 5.0f);
+        
         }
+        */
+        currentTime += Time.deltaTime;
+        if (currentTime > CoolTime)
+        {
+            currentTime = 0.0f;
+            CoolTime = Random.Range(2, 8);
+            int randomBullet = Random.Range(1, 11);
+            GameObject prefab =null;
+            if(randomBullet != 1)
+            {
+                prefab = InstantiatePrefabBullet(bullet);
+                fireSpeed = 400f;
+            }
+            else
+            {
+                prefab = InstantiatePrefabBullet(healSphere);
+                fireSpeed = 150f;
+            }
+            prefab.GetComponent<Rigidbody>().AddForce(transform.forward * fireSpeed);
+            Destroy(prefab, 7.0f);
+        }
+
+        transform.LookAt(player.transform);
+
     }
     public void ReloadBullet()
     {
         currentBullet = maxBullet;
-        Debug.Log("Add Bullet : " + currentBullet);
+        //Debug.Log("Add Bullet : " + currentBullet);
     }
 
-    public void SetCurrentBullet(int currentBullet)
+    GameObject InstantiatePrefabBullet(GameObject go)
     {
-        this.currentBullet = currentBullet;
+        return Instantiate(go, SpawnPos.position, transform.rotation);
+
     }
 
-    public int GetCurrentBullet()
-    {
-        return currentBullet;
-    }
 }
