@@ -16,6 +16,8 @@ public class myPlayerMove : MonoBehaviour
     [SerializeField] public float currentCoolTime;
     public float HP;
     public float skillCoolTime = 10f;
+    public float currentRunningGaze;
+    public float maxRunningGaze;
     float moveX;
     float moveZ;
     float moveY;
@@ -35,6 +37,7 @@ public class myPlayerMove : MonoBehaviour
         animatior = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         HP = maxHP;
+        currentRunningGaze = maxRunningGaze;
     }
 
 
@@ -69,13 +72,19 @@ public class myPlayerMove : MonoBehaviour
 
         //vector �ʱ�ȭ 
         //movement.magnitude�� ���ؼ� ã�ƺ��� 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && currentRunningGaze >= 2.0)
         {
             isRunning = runSpeed;
+            
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             isRunning = 1.0f;
+            //currentRunningGaze += Time.deltaTime;
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            currentRunningGaze -= Time.deltaTime;
         }
         if(Input.GetKeyDown(KeyCode.Space)&&currentCoolTime > skillCoolTime)
         {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -11,21 +12,53 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI playTimeTxt;
     public TextMeshProUGUI coolTimeTxt;
     public Image hpImage;
+    public Image coolTimeImage;
+    public TextMeshProUGUI GameOver;
+    public Button btn;
+
+    [SerializeField] TextMeshProUGUI runningTxt;
+    //[SerializeField] GameObject RunningUI;
+    [SerializeField] myPlayerMove move;
+
     float time;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         time = 0f;
+        //RunningUI.GetComponet<TextMeshProGUI>().text = "hi";
+        GameOver.enabled = false;
+        btn.enabled = false;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        coolTimeImage.color = Color.white;
         time += Time.deltaTime;
         playTimeTxt.text = $"Time : {time.ToString("F2")}";
-        coolTimeTxt.text = $"skill CoolTime : {player.GetComponent<myPlayerMove>().currentCoolTime.ToString("F2")}";
+        runningTxt.text = $"Running : {move.currentRunningGaze.ToString("F2")}";
+        //coolTimeTxt.text = $"skill CoolTime : {move.currentCoolTime.ToString("F2")}";
         //hpText.text = "HP : " + player.GetComponent<myPlayerMove>().HP;
-        hpImage.fillAmount = player.GetComponent<myPlayerMove>().HP / player.GetComponent<myPlayerMove>().maxHP;
+        hpImage.fillAmount = move.HP / move.maxHP;
+        coolTimeImage.fillAmount = move.currentCoolTime / move.skillCoolTime;
+        if(coolTimeImage.fillAmount >= 1)
+        {
+            coolTimeImage.color = Color.yellow;
+        }
+        if(move.HP <= 0 )
+        {
+           
+            btn.enabled = true;
+        }
+
+        
+        
+    }
+
+    public void btnClicked()
+    {
+        SceneManager.LoadScene("Homework");
     }
 }
