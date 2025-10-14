@@ -13,8 +13,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI coolTimeTxt;
     public Image hpImage;
     public Image coolTimeImage;
-    public TextMeshProUGUI GameOver;
-    public Button btn;
+    public GameObject GameOver;
+    public GameObject btn;
 
     [SerializeField] TextMeshProUGUI runningTxt;
     //[SerializeField] GameObject RunningUI;
@@ -27,8 +27,7 @@ public class UIManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         time = 0f;
         //RunningUI.GetComponet<TextMeshProGUI>().text = "hi";
-        GameOver.enabled = false;
-        btn.enabled = false;
+        
         
     }
 
@@ -49,8 +48,8 @@ public class UIManager : MonoBehaviour
         }
         if(move.HP <= 0 )
         {
-           
-            btn.enabled = true;
+            GameOver.SetActive(true);
+            btn.SetActive(true);
         }
 
         

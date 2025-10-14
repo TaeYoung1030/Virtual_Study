@@ -818,8 +818,8 @@ MonoBehaviour:
   coolTimeTxt: {fileID: 1547890286}
   hpImage: {fileID: 1576835164}
   coolTimeImage: {fileID: 1455890927}
-  GameOver: {fileID: 318791115}
-  btn: {fileID: 1099120905}
+  GameOver: {fileID: 318791113}
+  btn: {fileID: 1099120903}
   runningTxt: {fileID: 1897143876}
   move: {fileID: 1397732292}
 --- !u!4 &921141697
@@ -1372,7 +1372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -621, y: 295.6}
+  m_AnchoredPosition: {x: -632, y: 320}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1455890927
