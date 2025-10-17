@@ -26,6 +26,7 @@ public class myPlayerMove : MonoBehaviour
     Transform playerPosition;
     Animator animatior;
     Rigidbody rb;
+    UIManager ui;
     Vector3 movement;
 
     void Start()
@@ -38,13 +39,12 @@ public class myPlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         HP = maxHP;
         currentRunningGaze = maxRunningGaze;
+        ui = FindFirstObjectByType<UIManager>();
     }
 
 
     void Update()
     {
-        if (currentCoolTime >= 10f)
-            currentCoolTime = 10f;
         currentCoolTime += Time.deltaTime;
         // movement.x += speed;
         //moveX = Input.GetAxis("Horizontal");
@@ -72,26 +72,43 @@ public class myPlayerMove : MonoBehaviour
 
         //vector �ʱ�ȭ 
         //movement.magnitude�� ���ؼ� ã�ƺ��� 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && currentRunningGaze >= 2.0)
+        /*
+        if (Input.GetKeyDown(KeyCode.LeftShift)&& currentRunningGaze >= 1.5)
         {
             isRunning = runSpeed;
-            
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             isRunning = 1.0f;
-            //currentRunningGaze += Time.deltaTime;
         }
+        */
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            if (currentRunningGaze <= 0)
+                currentRunningGaze = 0;
             currentRunningGaze -= Time.deltaTime;
+            if (currentRunningGaze >= 1.5)
+                isRunning = runSpeed;
+            else
+                isRunning = 1.0f;
         }
-        if(Input.GetKeyDown(KeyCode.Space)&&currentCoolTime > skillCoolTime)
+        else
+        {
+            if(currentRunningGaze >= maxRunningGaze)
+                currentRunningGaze = maxRunningGaze;
+            currentRunningGaze += Time.deltaTime;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && currentCoolTime > skillCoolTime)
         {
             currentCoolTime = 0f;
             DestroyBullet();
         }
         animatior.SetBool("onGround", isGround);
+        if(ui.time >= 20)
+        {
+            //Time.timeScale = 0;
+            animatior.SetTrigger("Victory");
+        }
         if (Input.GetKeyDown(KeyCode.LeftControl) && isGround)
         {
 

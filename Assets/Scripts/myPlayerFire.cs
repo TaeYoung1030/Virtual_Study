@@ -14,6 +14,7 @@ public class myPlayerFire : MonoBehaviour
     [SerializeField] GameObject healSphere;
     [SerializeField] GameObject player;
 
+    
     int currentBullet = 0;
     float currentTime = 0.0f;
     // Start is called before the first frame update
@@ -22,6 +23,8 @@ public class myPlayerFire : MonoBehaviour
         currentBullet = maxBullet;
         CoolTime = Random.Range(2, 8);
         //Debug.Log(currentBullet);
+        Time.timeScale = 1;
+
     }
 
     // Update is called once per frame

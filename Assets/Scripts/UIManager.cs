@@ -11,35 +11,40 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI playTimeTxt;
     public TextMeshProUGUI coolTimeTxt;
+    
     public Image hpImage;
     public Image coolTimeImage;
+    public Image RunningGazeImage;
     public GameObject GameOver;
     public GameObject btn;
+    public GameObject vicTxt;
 
     [SerializeField] TextMeshProUGUI runningTxt;
     //[SerializeField] GameObject RunningUI;
     [SerializeField] myPlayerMove move;
 
-    float time;
+    
+
+    public float time;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         time = 0f;
-        //RunningUI.GetComponet<TextMeshProGUI>().text = "hi";
-        
-        
+        //RunningUI.GetComponet<TextMeshProGUI>().text = "hi"; 
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         coolTimeImage.color = Color.white;
         time += Time.deltaTime;
         playTimeTxt.text = $"Time : {time.ToString("F2")}";
-        runningTxt.text = $"Running : {move.currentRunningGaze.ToString("F2")}";
+        //runningTxt.text = $"Running : {move.currentRunningGaze.ToString("F2")}";
         //coolTimeTxt.text = $"skill CoolTime : {move.currentCoolTime.ToString("F2")}";
         //hpText.text = "HP : " + player.GetComponent<myPlayerMove>().HP;
+        RunningGazeImage.fillAmount = move.currentRunningGaze / move.maxRunningGaze;
         hpImage.fillAmount = move.HP / move.maxHP;
         coolTimeImage.fillAmount = move.currentCoolTime / move.skillCoolTime;
         if(coolTimeImage.fillAmount >= 1)
@@ -48,9 +53,20 @@ public class UIManager : MonoBehaviour
         }
         if(move.HP <= 0 )
         {
+            Time.timeScale = 0;
+            DestroyAll();
             GameOver.SetActive(true);
             btn.SetActive(true);
         }
+        if(time >= 20f)
+        {
+            Time.timeScale = 0;
+            DestroyAll();
+            vicTxt.SetActive(true);
+            btn.SetActive(true);
+        }
+        
+        
 
         
         
@@ -59,5 +75,20 @@ public class UIManager : MonoBehaviour
     public void btnClicked()
     {
         SceneManager.LoadScene("Homework");
+    }
+
+    void DestroyAll()
+    {
+        GameObject[] bullets;
+        bullets = GameObject.FindGameObjectsWithTag("Bullet");
+
+        foreach (GameObject bullet in bullets)
+            Destroy(bullet);
+
+        GameObject[] heals;
+        heals = GameObject.FindGameObjectsWithTag("Heal");
+
+        foreach (GameObject heal in heals)
+            Destroy(heal);
     }
 }
